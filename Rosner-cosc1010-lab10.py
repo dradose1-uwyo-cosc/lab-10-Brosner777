@@ -16,33 +16,20 @@ from pathlib import Path
 def get_hash(to_hash):
     """You can use """
     return sha256(to_hash.encode('utf-8')).hexdigest().upper()
-def read_file(file_path):
-    try:
-        with open(file_path, "r", encoding="utf-8") as file:
-            return file.readlines()
-    except:
-        return None 
-
-def crack_password(hash_file, password_file):
-    hash_lines = read_file(hash_file)
-    if not hash_lines:
-        return
+try:
+    with open('hash', 'r') as file:
+        hash_value = file.read().strip()
+except Exception as e:
+    print('Error:', e)
     
-    stored_hash = hash_lines[0].strip() 
+try:
+    with open('rockyou.txt', 'r') as file:
+        password_list = file.readlines()
+except Exception as e:
+    print('Error:', e)
 
-    passwords = read_file(password_file)
-    if not passwords:
-        return 
-
-    for password in passwords:
-        password = password.strip()
-        if get_hash(password) == stored_hash:
-            print(f"The password is: {password}")
-            return
-    print("No matching password found.")
-
-hash_text = "hash"
-rockyou_text = "rockyou.txt"
-
-crack_password(hash_text, rockyou_text)
-
+for password in password_list:
+    password = password.strip()
+    if get_hash(password) == hash_value:
+        print('Password:', password)
+        break
